@@ -1,6 +1,5 @@
 <template lang="pug">
   #app
-    img(src="./assets/logo.png")
     pk-pokemon-team
 </template>
 
