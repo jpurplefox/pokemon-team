@@ -10,6 +10,8 @@
           .tags
             .tag(v-for="type in specie.types" :class="[type.type.name, 'type']") {{ type.type.name }}
           p Ability: {{ specie.abilities[0].ability.name }}
+          a.button.is-danger.is-outlined(@click="remove(pokemon)")
+            span Delete
 </template>
 
 <script>
@@ -30,6 +32,12 @@ export default {
         this.specie = specie
         this.loaded = true
       })
+  },
+
+  methods: {
+    remove (pokemon) {
+      this.$emit('deletePokemon', pokemon)
+    }
   }
 }
 </script>
