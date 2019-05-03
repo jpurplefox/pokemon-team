@@ -7,4 +7,10 @@ specieService.get = function (id) {
     .then(res => res.data)
 }
 
+specieService.search = function (search) {
+  const limit = 1000
+  return pokeApiService.get('pokemon', { params: { limit } })
+    .then(res => res.data.results.filter(p => p.name.includes(search)))
+}
+
 export default specieService

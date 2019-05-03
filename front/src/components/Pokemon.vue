@@ -26,7 +26,7 @@ export default {
     }
   },
 
-  mounted () {
+  created () {
     specieService.get(this.pokemon.id)
       .then(specie => {
         this.specie = specie
