@@ -1,7 +1,8 @@
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import ListCreateAPIView
 
-from teams import serializers
+from teams import models, serializers
 
 
-class ListTeam(CreateAPIView):
+class ListTeam(ListCreateAPIView):
     serializer_class = serializers.TeamSerializer
+    queryset = models.Team.objects.all()
