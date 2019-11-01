@@ -1,0 +1,14 @@
+back:
+  build: backend
+  volumes:
+    - ./backend:/app
+  ports:
+    - "8000:8000"
+
+front:
+  build: front
+  volumes:
+    - ./front/src:/app/src
+    - ./front/tests:/app/tests
+  ports:
+    - "8080:8080"
