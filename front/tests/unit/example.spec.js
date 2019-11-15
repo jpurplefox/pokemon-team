@@ -5,6 +5,14 @@ import PokemonTeams from '@/components/PokemonTeams.vue'
 import teamService from '@/services/teams'
 
 describe('PokemonTeams.vue', () => {
+  beforeEach(function () {
+    sinon.replace(teamService, 'create', sinon.fake())
+  })
+
+  afterEach(function () {
+    sinon.restore()
+  })
+
   it('title is present', () => {
     const wrapper = shallowMount(PokemonTeams)
     expect(wrapper.text()).to.include('My pokémon teams')
@@ -19,7 +27,6 @@ describe('PokemonTeams.vue', () => {
   })
 
   it('call the backend endpoint when create a new team', () => {
-    sinon.replace(teamService, 'create', sinon.fake())
     const wrapper = shallowMount(PokemonTeams)
     var input = wrapper.find('input#team_name')
     input.setValue('New team')
