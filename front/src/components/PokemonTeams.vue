@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import teamService from '../services/teams'
+
 export default {
   data () {
     return {
@@ -17,6 +19,7 @@ export default {
 
   methods: {
     create_team () {
+      teamService.create(this.team_name)
       this.msg = `${this.team_name} has been created`
     }
   }
