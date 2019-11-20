@@ -65,4 +65,24 @@ describe('PokemonTeams.vue', () => {
       })
     })
   })
+
+  describe('Get created teams', () => {
+    var getTeams, getTeamsPromise
+
+    beforeEach(function () {
+      getTeams = sinon.stub(teamService, 'get_all')
+      getTeamsPromise = Promise.resolve([{ 'id': 1, 'name': 'My first team' }])
+      getTeams.withArgs().returns(getTeamsPromise)
+    })
+
+    afterEach(function () {
+      getTeams.restore()
+    })
+
+    it('call the get all endpoint when mounted', () => {
+      shallowMount(PokemonTeams)
+
+      assert(teamService.get_all.calledWith(), 'backend was not called')
+    })
+  })
 })

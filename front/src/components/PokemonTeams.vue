@@ -30,6 +30,10 @@ export default {
           this.team_name = ''
         })
     }
+  },
+
+  created () {
+    teamService.get_all()
   }
 }
 </script>
