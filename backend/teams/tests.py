@@ -17,6 +17,13 @@ class TeamsTest(TestCase):
         self.assertEqual(models.Team.objects.count(), 1)
         self.assertEqual(models.Team.objects.first().name, 'My pokemon team')
 
+    def test_create_a_team_should_return_team_id(self):
+        request = self.factory.post('/api/teams/', data={ 'name': 'My pokemon team' })
+        response = views.ListTeam.as_view()(request)
+
+        self.assertIn('id', response.data)
+        self.assertEqual(response.data['id'], models.Team.objects.first().id)
+
     def test_get_created_teams(self):
         models.Team.objects.create(name='My pokemon team')
         models.Team.objects.create(name='A second team')
