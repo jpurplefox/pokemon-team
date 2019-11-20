@@ -4,56 +4,57 @@ import sinon from '../../../node_modules/sinon/pkg/sinon-esm.js'
 import PokemonTeams from '@/components/PokemonTeams.vue'
 import teamService from '@/services/teams'
 
-var createTeam, createTeamPromise
-
 describe('PokemonTeams.vue', () => {
-  beforeEach(function () {
-    createTeam = sinon.stub(teamService, 'create')
-    createTeamPromise = Promise.resolve({
-      'id': 1,
-      'name': 'New team'
-    })
-    createTeam.withArgs('New team').returns(createTeamPromise)
-  })
-
-  afterEach(function () {
-    createTeam.restore()
-  })
-
   it('title is present', () => {
     const wrapper = shallowMount(PokemonTeams)
 
     expect(wrapper.text()).to.include('My pokémon teams')
   })
 
-  it('show successful message when create a new team', () => {
-    const wrapper = shallowMount(PokemonTeams)
-    var input = wrapper.find('input#team_name')
-    input.setValue('New team')
-    input.trigger('keydown.enter')
+  describe('Create a team', () => {
+    var createTeam, createTeamPromise, wrapper
 
-    createTeamPromise.then(() => {
-      expect(wrapper.text()).to.include('New team has been created')
+    function doCreateTeam (wrapper, name) {
+      var input = wrapper.find('input#team_name')
+      input.setValue(name)
+      input.trigger('keydown.enter')
+    }
+
+    beforeEach(function () {
+      wrapper = shallowMount(PokemonTeams)
+
+      createTeam = sinon.stub(teamService, 'create')
+      createTeamPromise = Promise.resolve({
+        'id': 1,
+        'name': 'New team'
+      })
+      createTeam.withArgs('New team').returns(createTeamPromise)
     })
-  })
 
-  it('call the backend endpoint when create a new team', () => {
-    const wrapper = shallowMount(PokemonTeams)
-    var input = wrapper.find('input#team_name')
-    input.setValue('New team')
-    input.trigger('keydown.enter')
+    afterEach(function () {
+      createTeam.restore()
+    })
 
-    assert(teamService.create.calledWith('New team'), 'backend was not called')
-  })
+    it('show successful message when create a new team', () => {
+      doCreateTeam(wrapper, 'New team')
 
-  it('show the new team in the list when created', () => {
-    const wrapper = shallowMount(PokemonTeams)
-    var input = wrapper.find('input#team_name')
-    input.setValue('New team')
-    input.trigger('keydown.enter')
+      createTeamPromise.then(() => {
+        expect(wrapper.text()).to.include('New team has been created')
+      })
+    })
 
-    return createTeamPromise.then(() => {
-      expect(wrapper.find('#team_1').text()).to.include('New team')
+    it('call the backend endpoint when create a new team', () => {
+      doCreateTeam(wrapper, 'New team')
+
+      assert(teamService.create.calledWith('New team'), 'backend was not called')
+    })
+
+    it('show the new team in the list when created', () => {
+      doCreateTeam(wrapper, 'New team')
+
+      return createTeamPromise.then(() => {
+        expect(wrapper.find('#team_1').text()).to.include('New team')
+      })
     })
   })
 })
