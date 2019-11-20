@@ -7,4 +7,9 @@ teamService.create = function (name) {
     .then(res => res.data)
 }
 
+teamService.get_all = function (name) {
+  return backendService.get('teams/')
+    .then(res => res.data)
+}
+
 export default teamService
