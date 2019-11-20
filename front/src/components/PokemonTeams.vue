@@ -27,6 +27,7 @@ export default {
         .then(data => {
           this.teams.push(data)
           this.msg = `${this.team_name} has been created`
+          this.team_name = ''
         })
     }
   }

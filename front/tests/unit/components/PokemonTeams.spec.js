@@ -56,5 +56,13 @@ describe('PokemonTeams.vue', () => {
         expect(wrapper.find('#team_1').text()).to.include('New team')
       })
     })
+
+    it('clean team name field after create', () => {
+      doCreateTeam(wrapper, 'New team')
+
+      return createTeamPromise.then(() => {
+        expect(wrapper.find('input#team_name').element.value).to.be.equal('')
+      })
+    })
   })
 })
