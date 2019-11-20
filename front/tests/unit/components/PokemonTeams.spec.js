@@ -84,5 +84,13 @@ describe('PokemonTeams.vue', () => {
 
       assert(teamService.get_all.calledWith(), 'backend was not called')
     })
+
+    it('show created teams in the list when mounted', () => {
+      const wrapper = shallowMount(PokemonTeams)
+
+      return getTeamsPromise.then(() => {
+        expect(wrapper.find('#team_1').text()).to.include('My first team')
+      })
+    })
   })
 })

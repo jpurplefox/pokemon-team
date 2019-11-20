@@ -34,6 +34,9 @@ export default {
 
   created () {
     teamService.get_all()
+      .then(data => {
+        this.teams = data
+      })
   }
 }
 </script>
