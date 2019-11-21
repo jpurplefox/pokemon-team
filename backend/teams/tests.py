@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.urls import resolve
+from django.urls import resolve, reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory
 
@@ -56,16 +56,28 @@ class TeamListViewTest(TestCase):
 
         response = self.perform_get()
 
-        self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
         self.assertIn('My pokemon team', [data['name'] for data in response.data])
         self.assertIn('A second team', [data['name'] for data in response.data])
 
 
 class TeamDetailViewTest(TestCase):
+    def perform_get(self, team_id):
+        url = reverse('team_detail', kwargs={'pk': team_id})
+        factory = APIRequestFactory()
+        request = factory.get(url)
+        view, args, kwargs = resolve(url)
+
+        return view(request, *args, **kwargs)
+
     def test_url_resolve_to_correct_view(self):
         match = resolve('/api/teams/1/')
 
         self.assertEquals(match.func.view_class, views.TeamDetail)
         self.assertIn('pk', match.kwargs)
         self.assertEquals(match.kwargs['pk'], 1)
+
+    def test_get_non_existent_team_return_http_404(self):
+        response = self.perform_get(1)
+
+        self.assertEquals(response.status_code, status.HTTP_404_NOT_FOUND)
