@@ -5,13 +5,14 @@ from rest_framework.test import APIRequestFactory
 from teams import models, views
 
 
-class TeamsTest(TestCase):
+class TeamListViewTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
+        self.view = views.TeamList.as_view()
 
     def test_create_a_team_successfully(self):
         request = self.factory.post('/api/teams/', data={ 'name': 'My pokemon team' })
-        response = views.ListTeam.as_view()(request)
+        response = self.view(request)
 
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(models.Team.objects.count(), 1)
@@ -19,7 +20,7 @@ class TeamsTest(TestCase):
 
     def test_create_a_team_should_return_team_id(self):
         request = self.factory.post('/api/teams/', data={ 'name': 'My pokemon team' })
-        response = views.ListTeam.as_view()(request)
+        response = self.view(request)
 
         self.assertIn('id', response.data)
         self.assertEqual(response.data['id'], models.Team.objects.first().id)
@@ -29,7 +30,7 @@ class TeamsTest(TestCase):
         models.Team.objects.create(name='A second team')
 
         request = self.factory.get('/api/teams/')
-        response = views.ListTeam.as_view()(request)
+        response = self.view(request)
 
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)

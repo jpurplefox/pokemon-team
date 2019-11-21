@@ -19,6 +19,6 @@ from django.urls import path
 from teams import views
 
 urlpatterns = [
-    path('api/teams/', views.ListTeam.as_view(), name='list_team'),
+    path('api/teams/', views.TeamList.as_view(), name='list_team'),
     path('admin/', admin.site.urls),
 ]
