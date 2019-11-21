@@ -14,7 +14,8 @@ class TeamList(ListCreateAPIView):
 class TeamDetail(APIView):
     def get(self, request, pk, format=None):
         try:
-            models.Team.objects.get(pk=pk)
+            team = models.Team.objects.get(pk=pk)
         except models.Team.DoesNotExist:
             raise NotFound()
-        return Response()
+        serializer = serializers.TeamSerializer(team)
+        return Response(serializer.data)

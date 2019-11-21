@@ -87,3 +87,12 @@ class TeamDetailViewTest(TestCase):
         response = self.perform_get(team.pk)
 
         self.assertEquals(response.status_code, status.HTTP_200_OK)
+
+    def test_get_a_team_return_that_team(self):
+        team = models.Team.objects.create(name='My pokemon team')
+        response = self.perform_get(team.pk)
+
+        self.assertIn('id', response.data)
+        self.assertEqual(response.data['id'], models.Team.objects.first().id)
+        self.assertIn('name', response.data)
+        self.assertEqual(response.data['name'], 'My pokemon team')
