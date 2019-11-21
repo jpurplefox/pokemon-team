@@ -60,3 +60,12 @@ class TeamListViewTest(TestCase):
         self.assertEqual(len(response.data), 2)
         self.assertIn('My pokemon team', [data['name'] for data in response.data])
         self.assertIn('A second team', [data['name'] for data in response.data])
+
+
+class TeamDetailViewTest(TestCase):
+    def test_url_resolve_to_correct_view(self):
+        match = resolve('/api/teams/1/')
+
+        self.assertEquals(match.func.view_class, views.TeamDetail)
+        self.assertIn('pk', match.kwargs)
+        self.assertEquals(match.kwargs['pk'], 1)
