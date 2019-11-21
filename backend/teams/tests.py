@@ -81,3 +81,9 @@ class TeamDetailViewTest(TestCase):
         response = self.perform_get(1)
 
         self.assertEquals(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_a_team_return_http_200(self):
+        team = models.Team.objects.create(name='My pokemon team')
+        response = self.perform_get(team.pk)
+
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
