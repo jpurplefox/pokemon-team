@@ -1,27 +1,47 @@
-import { assert } from 'chai'
 import sinon from '../../../node_modules/sinon/pkg/sinon-esm.js'
 import teamService from '@/services/teams'
 import backendService from '@/services/backend'
 
 describe('teamService', () => {
-  beforeEach(function () {
-    sinon.replace(backendService, 'post', sinon.fake.resolves({ 'data': {} }))
-    sinon.replace(backendService, 'get', sinon.fake.resolves({ 'data': {} }))
+  describe('endpoint posts', () => {
+    var backendPost
+
+    beforeEach(function () {
+      backendPost = sinon.stub(backendService, 'post')
+    })
+
+    afterEach(function () {
+      backendPost.restore()
+    })
+
+    it('post to teams endpoint when create teams', () => {
+      const backendPromise = Promise.resolve({ 'data': {} })
+      backendPost.returns(backendPromise)
+
+      teamService.create('New team')
+
+      sinon.assert.calledWith(backendPost, 'teams/', { name: 'New team' })
+    })
   })
 
-  afterEach(function () {
-    sinon.restore()
-  })
+  describe('endpoint gets', () => {
+    var backendGet
 
-  it('post to teams endpoint when create teams', () => {
-    teamService.create('New team')
+    beforeEach(function () {
+      backendGet = sinon.stub(backendService, 'get')
+    })
 
-    assert(backendService.post.calledWith('teams/', { name: 'New team' }), 'backen was not called')
-  })
+    afterEach(function () {
+      backendGet.restore()
+    })
 
-  it('get to teams endpoint when get all teams', () => {
-    teamService.get_all()
+    it('get to teams endpoint when get all teams', () => {
+      const backendGetPromise = Promise.resolve({ 'data': {} })
+      backendGet.returns(backendGetPromise)
 
-    assert(backendService.get.calledWith('teams/'), 'backen was not called')
+      teamService.get_all()
+
+      sinon.assert.calledWith(backendGet, 'teams/')
+    })
   })
 })
