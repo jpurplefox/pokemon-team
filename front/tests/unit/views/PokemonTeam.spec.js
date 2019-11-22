@@ -3,14 +3,17 @@ import { shallowMount } from '@vue/test-utils'
 import PokemonTeam from '@/views/PokemonTeam.vue'
 
 describe('PokemonTeam view', () => {
-  const $route = {
-    params: { id: '1' }
+  function mountView () {
+    const $route = {
+      params: { id: '1' }
+    }
+    return shallowMount(PokemonTeam, {
+      mocks: { $route }
+    })
   }
 
   it('id is passed in data', () => {
-    const wrapper = shallowMount(PokemonTeam, {
-      mocks: { $route }
-    })
+    const wrapper = mountView()
 
     expect(wrapper.vm.team_id).to.include('1')
   })
