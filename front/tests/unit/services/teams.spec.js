@@ -43,5 +43,15 @@ describe('teamService', () => {
 
       sinon.assert.calledWith(backendGet, 'teams/')
     })
+
+    it('get to specific team endpoint when get a team', () => {
+      const teamId = 1
+      const backendGetPromise = Promise.resolve({ 'data': {} })
+      backendGet.returns(backendGetPromise)
+
+      teamService.get(teamId)
+
+      sinon.assert.calledWith(backendGet, 'teams/1/')
+    })
   })
 })

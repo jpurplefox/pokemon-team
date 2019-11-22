@@ -7,8 +7,13 @@ teamService.create = function (name) {
     .then(res => res.data)
 }
 
-teamService.get_all = function (name) {
+teamService.get_all = function () {
   return backendService.get('teams/')
+    .then(res => res.data)
+}
+
+teamService.get = function (teamId) {
+  return backendService.get(`teams/${teamId}/`)
     .then(res => res.data)
 }
 
