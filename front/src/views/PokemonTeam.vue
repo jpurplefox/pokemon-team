@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Pokémon team</h1>
+    <h1>{{ team.name }}</h1>
   </div>
 </template>
 
@@ -10,12 +10,16 @@ import teamService from '@/services/teams'
 export default {
   data () {
     return {
-      teamId: parseInt(this.$route.params.id)
+      teamId: parseInt(this.$route.params.id),
+      team: {}
     }
   },
 
   mounted () {
     teamService.get(this.teamId)
+      .then(team => {
+        this.team = team
+      })
   }
 }
 </script>

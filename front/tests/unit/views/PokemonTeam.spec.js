@@ -41,5 +41,13 @@ describe('PokemonTeam view', () => {
 
       sinon.assert.calledWith(getTeam, 1)
     })
+
+    it('team is showed when view is mounted', () => {
+      const wrapper = mountView()
+
+      return getTeamPromise.then(() => {
+        expect(wrapper.html()).to.include('Created team')
+      })
+    })
   })
 })
