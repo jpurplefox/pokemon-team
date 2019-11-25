@@ -5,11 +5,17 @@
 </template>
 
 <script>
+import teamService from '@/services/teams'
+
 export default {
   data () {
     return {
-      team_id: this.$route.params.id
+      teamId: parseInt(this.$route.params.id)
     }
+  },
+
+  mounted () {
+    teamService.get(this.teamId)
   }
 }
 </script>
