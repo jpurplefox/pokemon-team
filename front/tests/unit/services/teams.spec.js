@@ -1,57 +1,62 @@
+import { expect } from 'chai'
 import sinon from '../../../node_modules/sinon/pkg/sinon-esm.js'
 import teamService from '@/services/teams'
 import backendService from '@/services/backend'
 
 describe('teamService', () => {
-  describe('endpoint posts', () => {
-    var backendPost
+  var backendServiceMock
 
-    beforeEach(function () {
-      backendPost = sinon.stub(backendService, 'post')
-    })
-
-    afterEach(function () {
-      backendPost.restore()
-    })
-
-    it('post to teams endpoint when create teams', () => {
-      const backendPromise = Promise.resolve({ 'data': {} })
-      backendPost.returns(backendPromise)
-
-      teamService.create('New team')
-
-      sinon.assert.calledWith(backendPost, 'teams/', { name: 'New team' })
-    })
+  beforeEach(function () {
+    backendServiceMock = sinon.mock(backendService)
   })
 
-  describe('endpoint gets', () => {
-    var backendGet
+  afterEach(function () {
+    backendServiceMock.restore()
+  })
 
-    beforeEach(function () {
-      backendGet = sinon.stub(backendService, 'get')
-    })
+  it('post to teams endpoint when create teams', () => {
+    const expectedResponse = { 'id': 1, 'name': 'My first team' }
+    backendServiceMock
+      .expects('post')
+      .once().withArgs('teams/', { name: 'New team' })
+      .resolves({ 'data': expectedResponse })
 
-    afterEach(function () {
-      backendGet.restore()
-    })
+    return teamService.create('New team')
+      .then((team) => {
+        backendServiceMock.verify()
 
-    it('get to teams endpoint when get all teams', () => {
-      const backendGetPromise = Promise.resolve({ 'data': {} })
-      backendGet.returns(backendGetPromise)
+        expect(team).to.deep.equal(expectedResponse)
+      })
+  })
 
-      teamService.get_all()
+  it('get to teams endpoint when get all teams', () => {
+    const expectedResponse = [{ 'id': 1, 'name': 'My first team' }]
+    backendServiceMock
+      .expects('get')
+      .once().withArgs('teams/')
+      .resolves({ 'data': expectedResponse })
 
-      sinon.assert.calledWith(backendGet, 'teams/')
-    })
+    return teamService.get_all()
+      .then((teams) => {
+        backendServiceMock.verify()
 
-    it('get to specific team endpoint when get a team', () => {
-      const teamId = 1
-      const backendGetPromise = Promise.resolve({ 'data': {} })
-      backendGet.returns(backendGetPromise)
+        expect(teams).to.deep.equal(expectedResponse)
+      })
+  })
 
-      teamService.get(teamId)
+  it('get to specific team endpoint when get a team', () => {
+    const teamId = 1
+    const expectedResponse = { 'id': 1, 'name': 'My first team' }
+    backendServiceMock
+      .expects('get')
+      .once().withArgs('teams/1/')
+      .resolves({ 'data': expectedResponse })
 
-      sinon.assert.calledWith(backendGet, 'teams/1/')
-    })
+    return teamService.get(teamId)
+      .then((team) => {
+        backendServiceMock.verify()
+
+        expect(team).to.deep.equal(expectedResponse)
+      })
   })
 })
