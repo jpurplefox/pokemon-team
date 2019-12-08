@@ -1,14 +1,28 @@
-back:
-  build: backend
-  volumes:
-    - ./backend:/app
-  ports:
-    - "8000:8000"
+version: "3.7"
 
-front:
-  build: front
-  volumes:
-    - ./front/src:/app/src
-    - ./front/tests:/app/tests
-  ports:
-    - "8080:8080"
+services:
+  back:
+    build: backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - redis
+
+  front:
+    build: front
+    volumes:
+      - ./front/src:/app/src
+      - ./front/tests:/app/tests
+    ports:
+      - "8080:8080"
+
+  redis:
+    image: redis
+    networks:
+      - redis
+
+networks:
+  redis:
+    driver: bridge

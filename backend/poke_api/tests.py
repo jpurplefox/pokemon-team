@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.core.cache import cache
 from django.test import TestCase
 from django.urls import resolve
 from rest_framework import status
@@ -12,6 +13,7 @@ from poke_api import views
 class PokeApiTest(TestCase):
     @patch('poke_api.services.requests')
     def test_get_all_pokemon_return_pokemon_list(self, requests_mock):
+        cache.clear()
         expected_api_response = {'results': [
             {'name': 'bulbasaur', 'url': 'https://pokeapi.co/api/v2/pokemon/1/'},
             {'name': 'ivysaur', 'url': 'https://pokeapi.co/api/v2/pokemon/2/'},
@@ -22,6 +24,22 @@ class PokeApiTest(TestCase):
 
         requests_mock.get.assert_called_with('https://pokeapi.co/api/v2/pokemon/', {'limit': 1000})
         self.assertEqual(expected_api_response['results'], pokemon_list)
+        cache.clear()
+
+    @patch('poke_api.services.requests')
+    def test_many_calls_to_get_all_pokemom_call_poke_api_once(self, requests_mock):
+        cache.clear()
+        expected_api_response = {'results': [
+            {'name': 'bulbasaur', 'url': 'https://pokeapi.co/api/v2/pokemon/1/'},
+            {'name': 'ivysaur', 'url': 'https://pokeapi.co/api/v2/pokemon/2/'},
+        ]}
+        requests_mock.get.return_value.json.return_value = expected_api_response
+
+        pokemon_list = PokeApi().get_all_pokemon()
+        pokemon_list = PokeApi().get_all_pokemon()
+
+        requests_mock.get.assert_called_once()
+        cache.clear()
 
 
 class PokemonListViewTest(TestCase):

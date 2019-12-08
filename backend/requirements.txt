@@ -3,9 +3,11 @@ chardet==3.0.4
 coverage==4.5.4
 Django==2.2.8
 django-cors-headers==3.1.1
+django-redis==4.10.0
 djangorestframework==3.10.3
 idna==2.8
 pytz==2019.3
+redis==3.3.11
 requests==2.22.0
 sqlparse==0.3.0
 urllib3==1.25.7
