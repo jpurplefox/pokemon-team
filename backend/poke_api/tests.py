@@ -2,6 +2,8 @@ from unittest.mock import patch
 
 from django.test import TestCase
 from django.urls import resolve
+from rest_framework import status
+from rest_framework.test import APIRequestFactory
 
 from poke_api.services import PokeApi
 from poke_api import views
@@ -23,7 +25,17 @@ class PokeApiTest(TestCase):
 
 
 class PokemonListViewTest(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.view = views.PokemonList.as_view()
+
     def test_url_resolve_to_correct_view(self):
         match = resolve('/api/pokemon/')
 
         self.assertEquals(match.func.view_class, views.PokemonList)
+
+    def test_get_pokemon_list_return_http_200(self):
+        request = self.factory.get('/api/pokemon/')
+        response = self.view(request)
+
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
