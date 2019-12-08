@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from teams import views
+from teams import views as teams_views
+from poke_api import views as pokemon_views
 
 urlpatterns = [
-    path('api/teams/', views.TeamList.as_view(), name='team_list'),
-    path('api/teams/<int:pk>/', views.TeamDetail.as_view(), name='team_detail'),
+    path('api/teams/', teams_views.TeamList.as_view(), name='team_list'),
+    path('api/teams/<int:pk>/', teams_views.TeamDetail.as_view(), name='team_detail'),
+    path('api/pokemon/', pokemon_views.PokemonList.as_view(), name='pokemon_list'),
     path('admin/', admin.site.urls),
 ]
